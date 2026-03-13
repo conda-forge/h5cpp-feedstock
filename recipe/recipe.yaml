@@ -36,7 +36,7 @@ requirements:
     - catch2
     - zlib
   run_exports:
-    - ${{ pin_subpackage("h5cpp", max_pin="x.x") }}
+    - ${{ pin_subpackage("h5cpp", upper_bound="x.x") }}
 
 tests:
     - package_contents:
