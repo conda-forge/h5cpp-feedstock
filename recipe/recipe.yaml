@@ -20,7 +20,7 @@ build:
         then:  set CL=/DH5_BUILT_AS_DYNAMIC_LIB=1 %CL%
       - if: win
         then: cmake -B build -G Ninja  %CMAKE_ARGS%  -DH5CPP_CONAN=DISABLE -DHDF5_FIND_DEBUG=ON  -DHDF5_USE_STATIC_LIBRARIES=OFF
-        else: cmake -B build  ${CMAKE_ARGS}  -DH5CPP_CONAN=DISABLE
+        else: cmake -B build  ${CMAKE_ARGS}  -DH5CPP_CONAN=DISABLE -DCMAKE_CXX_FLAGS="-DPNG_ARM_NEON_OPT=0"
       - cmake --build build
       - cmake --install build
       - if: win
