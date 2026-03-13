@@ -14,7 +14,7 @@ source:
           - remove-findhdf5.patch
 
 build:
-    number: 0
+    number: 1
     script:
       - if: win
         then:  set CL=/DH5_BUILT_AS_DYNAMIC_LIB=1 %CL%
@@ -35,6 +35,8 @@ requirements:
     - hdf5
     - catch2
     - zlib
+  run_exports:
+    - ${{ pin_subpackage("h5cpp", max_pin="x.x") }}
 
 tests:
     - package_contents:
@@ -58,7 +60,6 @@ tests:
 about:
   homepage: https://github.com/ess-dmsc/h5cpp
   license: LGPL-2.1-only
-  license_family: LGPL
   license_file: LICENSE
   summary: C++ wrapper for hdf5
   description: |
