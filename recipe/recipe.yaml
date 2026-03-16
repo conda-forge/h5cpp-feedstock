@@ -22,7 +22,9 @@ build:
         then: cmake -B build -G Ninja  %CMAKE_ARGS%  -DH5CPP_CONAN=DISABLE -DHDF5_FIND_DEBUG=ON  -DHDF5_USE_STATIC_LIBRARIES=OFF
       - if: linux
         then: cmake -B build  ${CMAKE_ARGS}  -DH5CPP_CONAN=DISABLE
-      - if: osx
+      - if: osx and build_platform == target_platform
+        then: cmake -B build  ${CMAKE_ARGS}  -DH5CPP_CONAN=DISABLE
+      - if: osx and build_platform != target_platform
         then: cmake -B build  ${CMAKE_ARGS}  -DH5CPP_CONAN=DISABLE -DH5CPP_DISABLE_TESTS=ON
       - cmake --build build
       - cmake --install build
@@ -30,7 +32,9 @@ build:
         then: ctest --test-dir build --extra-verbose --no-tests=error
       - if: linux
         then: ctest --test-dir build --extra-verbose --no-tests=error --exclude-regex='signed integer properties - char|signed integer properties with cref - char'
-
+      - if: osx and build_platform == target_platform
+        then: ctest --test-dir build --extra-verbose --no-tests=error --exclude-regex='signed integer properties - char|signed integer properties with cref - char' 
+      
 requirements:
   build:
     - ${{ compiler('cxx') }}
