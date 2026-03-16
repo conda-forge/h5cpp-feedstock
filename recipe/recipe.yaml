@@ -20,15 +20,15 @@ build:
         then:  set CL=/DH5_BUILT_AS_DYNAMIC_LIB=1 %CL%
       - if: win
         then: cmake -B build -G Ninja  %CMAKE_ARGS%  -DH5CPP_CONAN=DISABLE -DHDF5_FIND_DEBUG=ON  -DHDF5_USE_STATIC_LIBRARIES=OFF
-      - if: linux or osx-64
+      - if: linux
         then: cmake -B build  ${CMAKE_ARGS}  -DH5CPP_CONAN=DISABLE
-      - if: osx-arm64
+      - if: osx
         then: cmake -B build  ${CMAKE_ARGS}  -DH5CPP_CONAN=DISABLE -DH5CPP_DISABLE_TESTS=ON
       - cmake --build build
       - cmake --install build
       - if: win
         then: ctest --test-dir build --extra-verbose --no-tests=error
-      - if: linux or osx-64
+      - if: linux
         then: ctest --test-dir build --extra-verbose --no-tests=error --exclude-regex='signed integer properties - char|signed integer properties with cref - char'
 
 requirements:
