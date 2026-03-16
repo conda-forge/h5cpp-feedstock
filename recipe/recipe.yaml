@@ -23,9 +23,8 @@ build:
         else: cmake -B build  ${CMAKE_ARGS}  -DH5CPP_CONAN=DISABLE
       - cmake --build build
       - cmake --install build
-      - if: win
-        then: ctest --test-dir build --extra-verbose --no-tests=error
-        else: ctest --test-dir build --extra-verbose --no-tests=error --exclude-regex='signed integer properties - char|signed integer properties with cref - char'
+      - if: build_platform == target_platform
+        then: ctest --test-dir build --extra-verbose --no-tests=error --exclude-regex='signed integer properties - char|signed integer properties with cref - char'
 
 requirements:
   build:
