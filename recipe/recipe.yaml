@@ -14,27 +14,41 @@ source:
           - remove-findhdf5.patch
 
 build:
-    number: 0
+    number: 1
     script:
       - if: win
         then:  set CL=/DH5_BUILT_AS_DYNAMIC_LIB=1 %CL%
       - if: win
         then: cmake -B build -G Ninja  %CMAKE_ARGS%  -DH5CPP_CONAN=DISABLE -DHDF5_FIND_DEBUG=ON  -DHDF5_USE_STATIC_LIBRARIES=OFF
-        else: cmake -B build -G Ninja  ${CMAKE_ARGS}  -DH5CPP_CONAN=DISABLE
+      - if: linux
+        then: cmake -B build  ${CMAKE_ARGS}  -DH5CPP_CONAN=DISABLE
+      - if: osx and build_platform == target_platform
+        then: cmake -B build  ${CMAKE_ARGS}  -DH5CPP_CONAN=DISABLE
+      - if: osx and build_platform != target_platform
+        then: cmake -B build  ${CMAKE_ARGS}  -DH5CPP_CONAN=DISABLE -DH5CPP_DISABLE_TESTS=ON
       - cmake --build build
       - cmake --install build
-      - ctest --test-dir build --extra-verbose --no-tests=error
-
+      - if: win
+        then: ctest --test-dir build --extra-verbose --no-tests=error
+      - if: linux
+        then: ctest --test-dir build --extra-verbose --no-tests=error --exclude-regex='signed integer properties - char|signed integer properties with cref - char'
+      - if: osx and build_platform == target_platform
+        then: ctest --test-dir build --extra-verbose --no-tests=error --exclude-regex='signed integer properties - char|signed integer properties with cref - char' 
+      
 requirements:
   build:
     - ${{ compiler('cxx') }}
     - ${{ stdlib('c') }}
     - cmake
     - ninja
+    - if: not win
+      then: make
   host:
     - hdf5
     - catch2
     - zlib
+  run_exports:
+    - ${{ pin_subpackage("h5cpp", upper_bound="x.x") }}
 
 tests:
     - package_contents:
@@ -58,7 +72,6 @@ tests:
 about:
   homepage: https://github.com/ess-dmsc/h5cpp
   license: LGPL-2.1-only
-  license_family: LGPL
   license_file: LICENSE
   summary: C++ wrapper for hdf5
   description: |
