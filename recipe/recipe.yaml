@@ -6,35 +6,35 @@ package:
   version: ${{ version }}
 
 source:
-    url: https://github.com/ess-dmsc/h5cpp/archive/refs/tags/v${{ version }}.tar.gz
-    sha256: e832fb729aaf328d0f30b34e577645f33fdaccda0e1b0c06cb9a3d412a728ad3
-    patches:
-     - if: win
-       then:
-          - remove-findhdf5.patch
+  url: https://github.com/ess-dmsc/h5cpp/archive/refs/tags/v${{ version }}.tar.gz
+  sha256: e832fb729aaf328d0f30b34e577645f33fdaccda0e1b0c06cb9a3d412a728ad3
+  patches:
+    - if: win
+      then:
+        - remove-findhdf5.patch
 
 build:
-    number: 1
-    script:
-      - if: win
-        then:  set CL=/DH5_BUILT_AS_DYNAMIC_LIB=1 %CL%
-      - if: win
-        then: cmake -B build -G Ninja  %CMAKE_ARGS%  -DH5CPP_CONAN=DISABLE -DHDF5_FIND_DEBUG=ON  -DHDF5_USE_STATIC_LIBRARIES=OFF
-      - if: linux
-        then: cmake -B build  ${CMAKE_ARGS}  -DH5CPP_CONAN=DISABLE
-      - if: osx and build_platform == target_platform
-        then: cmake -B build  ${CMAKE_ARGS}  -DH5CPP_CONAN=DISABLE
-      - if: osx and build_platform != target_platform
-        then: cmake -B build  ${CMAKE_ARGS}  -DH5CPP_CONAN=DISABLE -DH5CPP_DISABLE_TESTS=ON
-      - cmake --build build
-      - cmake --install build
-      - if: win
-        then: ctest --test-dir build --extra-verbose --no-tests=error
-      - if: linux
-        then: ctest --test-dir build --extra-verbose --no-tests=error --exclude-regex='signed integer properties - char|signed integer properties with cref - char'
-      - if: osx and build_platform == target_platform
-        then: ctest --test-dir build --extra-verbose --no-tests=error --exclude-regex='signed integer properties - char|signed integer properties with cref - char' 
-      
+  number: 2
+  script:
+    - if: win
+      then:
+        - set CL=/DH5_BUILT_AS_DYNAMIC_LIB=1 %CL%
+        - cmake -B build -G Ninja  %CMAKE_ARGS%  -DH5CPP_CONAN=DISABLE -DHDF5_FIND_DEBUG=ON  -DHDF5_USE_STATIC_LIBRARIES=OFF
+    - if: linux
+      then: cmake -B build  ${CMAKE_ARGS}  -DH5CPP_CONAN=DISABLE
+    - if: osx and build_platform == target_platform
+      then: cmake -B build  ${CMAKE_ARGS}  -DH5CPP_CONAN=DISABLE
+    - if: osx and build_platform != target_platform
+      then: cmake -B build  ${CMAKE_ARGS}  -DH5CPP_CONAN=DISABLE -DH5CPP_DISABLE_TESTS=ON
+    - cmake --build build
+    - cmake --install build
+    - if: win
+      then: ctest --test-dir build --extra-verbose --no-tests=error
+    - if: linux
+      then: ctest --test-dir build --extra-verbose --no-tests=error --exclude-regex='signed integer properties - char|signed integer properties with cref - char'
+    - if: osx and build_platform == target_platform
+      then: ctest --test-dir build --extra-verbose --no-tests=error --exclude-regex='signed integer properties - char|signed integer properties with cref - char'
+
 requirements:
   build:
     - ${{ compiler('cxx') }}
@@ -51,23 +51,23 @@ requirements:
     - ${{ pin_subpackage("h5cpp", upper_bound="x.x") }}
 
 tests:
-    - package_contents:
-        include:
-          - h5cpp/file/file.hpp
-          - h5cpp/core/*.hpp
-          - h5cpp/attribute/*.hpp
-          - h5cpp/dataspace/*.hpp
-          - h5cpp/datatype/*.hpp
-          - h5cpp/error/*.hpp
-          - h5cpp/file/*.hpp
-          - h5cpp/filter/*.hpp
-          - h5cpp/node/*.hpp
-          - h5cpp/property/*.hpp
-          - h5cpp/utilities/*.hpp
-          - h5cpp/contrib/nexus/ebool.hpp
-          - h5cpp/contrib/stl/*.hpp
-        lib:  
-          - h5cpp
+  - package_contents:
+      include:
+        - h5cpp/file/file.hpp
+        - h5cpp/core/*.hpp
+        - h5cpp/attribute/*.hpp
+        - h5cpp/dataspace/*.hpp
+        - h5cpp/datatype/*.hpp
+        - h5cpp/error/*.hpp
+        - h5cpp/file/*.hpp
+        - h5cpp/filter/*.hpp
+        - h5cpp/node/*.hpp
+        - h5cpp/property/*.hpp
+        - h5cpp/utilities/*.hpp
+        - h5cpp/contrib/nexus/ebool.hpp
+        - h5cpp/contrib/stl/*.hpp
+      lib:
+        - h5cpp
 
 about:
   homepage: https://github.com/ess-dmsc/h5cpp
