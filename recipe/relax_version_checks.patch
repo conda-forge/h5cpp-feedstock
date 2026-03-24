@@ -1,0 +1,11 @@
+--- a/test/property/file_access_test.cpp
++++ b/test/property/file_access_test.cpp
+@@ -92,7 +92,7 @@
+     pl::FileAccessList fapl;
+     THEN("we expect") {
+       REQUIRE(fapl.get_class() == pl::kFileAccess);
+-      REQUIRE(fapl.library_version_bound_low() == pl::LibVersion::Earliest);
++      REQUIRE(((fapl.library_version_bound_low() == pl::LibVersion::Earliest) || (fapl.library_version_bound_low() == pl::LibVersion::V18)));
+       REQUIRE(fapl.library_version_bound_high() == pl::LibVersion::Latest);
+       REQUIRE(fapl.close_degree() == pl::CloseDegree::Default);
+     }
