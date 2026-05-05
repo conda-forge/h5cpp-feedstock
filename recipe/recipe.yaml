@@ -1,5 +1,5 @@
 context:
-  version: 0.7.1
+  version: "0.8.0"
 
 package:
   name: h5cpp
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://github.com/ess-dmsc/h5cpp/archive/refs/tags/v${{ version }}.tar.gz
-  sha256: e832fb729aaf328d0f30b34e577645f33fdaccda0e1b0c06cb9a3d412a728ad3
+  sha256: cc0bb662c2eb5abc10185ccd86e3a7f68aa2463f02a8ecef570a1c9de508f87b
   patches:
     - relax_version_checks.patch
     - if: win
@@ -15,7 +15,7 @@ source:
         - remove-findhdf5.patch
 
 build:
-  number: 2
+  number: 0
   script:
     - if: win
       then:
